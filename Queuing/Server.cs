@@ -17,7 +17,7 @@ class Server
 		pool = new PoolRecord[poolSize];
 	}
 
-	public void proc(object sender, ProcEventArgs e)
+	public void proc(object? sender, ProcEventArgs e)
 	{
 		lock (threadLock)
 		{
