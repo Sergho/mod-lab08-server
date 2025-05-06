@@ -41,7 +41,7 @@ class Server
 	{
 		int? id = (int?)arg;
 		Console.WriteLine("Обработка заявки: {0}", id);
-		Thread.Sleep(1000);
+		Thread.Sleep(500);
 		for (int i = 0; i < poolSize; i++)
 		{
 			if (pool[i].thread == Thread.CurrentThread)
