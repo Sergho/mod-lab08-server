@@ -74,7 +74,7 @@ class Program
 			plot.ShowLegend();
 
 			Directory.CreateDirectory(graphDirname);
-			plot.SavePng($"{graphDirname}/{i + 1}.png", 1200, 800);
+			plot.SavePng($"{graphDirname}/p-{i + 1}.png", 1200, 800);
 		}
 	}
 }
