@@ -8,10 +8,11 @@ class Program
 	static void Main()
 	{
 		FlowAnalyzer analyzer = new(20, 2, 5);
-		Console.WriteLine("Ожидаемая вероятность простоя системы: {0}", analyzer.getExpectedDowntimeProbability());
-		Console.WriteLine("Ожидаемая вероятность отказа системы: {0}", analyzer.getExpectedFailureProbability());
-		Console.WriteLine("Ожидаемая относительная пропускная способность: {0}", analyzer.getExpectedRelativeThroughput());
-		Console.WriteLine("Ожидаемая абсолютная пропускная способность: {0}", analyzer.getExpectedAbsoluteThroughput());
-		Console.WriteLine("Ожидаемое среднее число занятых каналов: {0}", analyzer.getExpectedAverageUsed());
+		AnalysisResult expected = analyzer.getExpected();
+		Console.WriteLine("Ожидаемая вероятность простоя системы: {0}", expected.downtimeProbability);
+		Console.WriteLine("Ожидаемая вероятность отказа системы: {0}", expected.failureProbability);
+		Console.WriteLine("Ожидаемая относительная пропускная способность: {0}", expected.relativeThroughput);
+		Console.WriteLine("Ожидаемая абсолютная пропускная способность: {0}", expected.absoluteThroughput);
+		Console.WriteLine("Ожидаемое среднее число занятых каналов: {0}", expected.averageUsedCount);
 	}
 }

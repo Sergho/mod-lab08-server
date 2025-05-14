@@ -14,7 +14,17 @@ class FlowAnalyzer
 		reducedIntesity = queryIntensity / serviceIntensity;
 		this.poolSize = poolSize;
 	}
-	public double getExpectedDowntimeProbability()
+	public AnalysisResult getExpected()
+	{
+		AnalysisResult result = new();
+		result.downtimeProbability = getExpectedDowntimeProbability();
+		result.failureProbability = getExpectedFailureProbability();
+		result.relativeThroughput = getExpectedRelativeThroughput();
+		result.absoluteThroughput = getExpectedAbsoluteThroughput();
+		result.averageUsedCount = getExpectedAverageUsedCount();
+		return result;
+	}
+	private double getExpectedDowntimeProbability()
 	{
 		double sum = 0;
 		for (int i = 0; i <= poolSize; i++)
@@ -25,24 +35,24 @@ class FlowAnalyzer
 		}
 		return Math.Pow(sum, -1);
 	}
-	public double getExpectedFailureProbability()
+	private double getExpectedFailureProbability()
 	{
 		double downTimeProbability = getExpectedDowntimeProbability();
 		int factorial = 1;
 		for (int i = 1; i <= poolSize; i++) factorial *= i;
 		return Math.Pow(reducedIntesity, poolSize) / factorial * downTimeProbability;
 	}
-	public double getExpectedRelativeThroughput()
+	private double getExpectedRelativeThroughput()
 	{
 		double failureProbability = getExpectedFailureProbability();
 		return 1 - failureProbability;
 	}
-	public double getExpectedAbsoluteThroughput()
+	private double getExpectedAbsoluteThroughput()
 	{
 		double relative = getExpectedRelativeThroughput();
 		return queryIntensity * relative;
 	}
-	public double getExpectedAverageUsed()
+	private double getExpectedAverageUsedCount()
 	{
 		double throughput = getExpectedAbsoluteThroughput();
 		return throughput / serviceIntensity;
