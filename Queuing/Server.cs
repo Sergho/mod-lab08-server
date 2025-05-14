@@ -5,18 +5,19 @@ namespace Queuing;
 
 class Server
 {
-	private readonly int poolSize = 5;
 	private PoolRecord[] pool;
 	private object threadLock = new();
 	private int serviceIntensity;
+	private int poolSize;
 	public int requestedCount = 0;
 	public int processedCount = 0;
 	public int rejectedCount = 0;
 
-	public Server(int serviceIntensity)
+	public Server(int serviceIntensity, int poolSize)
 	{
 		pool = new PoolRecord[poolSize];
 		this.serviceIntensity = serviceIntensity;
+		this.poolSize = poolSize;
 	}
 
 	public void proc(object? sender, ProcEventArgs e)
