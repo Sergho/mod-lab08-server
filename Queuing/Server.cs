@@ -7,13 +7,13 @@ class Server
 {
 	private PoolRecord[] pool;
 	private object threadLock = new();
-	private int serviceIntensity;
+	private double serviceIntensity;
 	private int poolSize;
 	public int requestedCount = 0;
 	public int processedCount = 0;
 	public int rejectedCount = 0;
 
-	public Server(int serviceIntensity, int poolSize)
+	public Server(double serviceIntensity, int poolSize)
 	{
 		pool = new PoolRecord[poolSize];
 		this.serviceIntensity = serviceIntensity;
@@ -44,7 +44,7 @@ class Server
 	{
 		int? id = (int?)arg;
 		Console.WriteLine("Обработка заявки: {0}", id);
-		Thread.Sleep(1000 / serviceIntensity);
+		Thread.Sleep((int)(1000 / serviceIntensity));
 		for (int i = 0; i < poolSize; i++)
 		{
 			if (pool[i].thread == Thread.CurrentThread)
@@ -52,5 +52,14 @@ class Server
 				pool[i].inUse = false;
 			}
 		}
+	}
+	public int getUsedCount()
+	{
+		int counter = 0;
+		foreach (PoolRecord record in pool)
+		{
+			if (record.inUse) counter++;
+		}
+		return counter;
 	}
 }

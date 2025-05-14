@@ -14,6 +14,44 @@ class FlowAnalyzer
 		reducedIntesity = queryIntensity / serviceIntensity;
 		this.poolSize = poolSize;
 	}
+	public AnalysisResult getActual()
+	{
+		Server server = new(serviceIntensity, poolSize);
+		Client client = new(server);
+
+		int checksCount = 0;
+		int totalUsedCount = 0;
+		int busyChecksCount = 0;
+
+		bool isMonitoring = true;
+		Thread monitoring = new(() =>
+		{
+			while (isMonitoring)
+			{
+				checksCount++;
+				int usedCount = server.getUsedCount();
+				if (usedCount == poolSize) busyChecksCount++;
+				totalUsedCount += usedCount;
+			}
+		});
+		monitoring.Start();
+
+		for (int i = 1; i <= 100; i++)
+		{
+			client.send(i);
+			Thread.Sleep((int)(1000 / queryIntensity));
+		}
+
+		isMonitoring = false;
+
+		AnalysisResult result = new();
+		result.downtimeProbability = (double)(checksCount - busyChecksCount) / checksCount;
+		result.failureProbability = (double)server.rejectedCount / server.requestedCount;
+		result.relativeThroughput = (double)server.processedCount / server.requestedCount;
+		result.absoluteThroughput = result.relativeThroughput * queryIntensity;
+		result.averageUsedCount = (double)totalUsedCount / checksCount;
+		return result;
+	}
 	public AnalysisResult getExpected()
 	{
 		AnalysisResult result = new();
