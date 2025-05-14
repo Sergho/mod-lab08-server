@@ -8,13 +8,15 @@ class Server
 	private readonly int poolSize = 5;
 	private PoolRecord[] pool;
 	private object threadLock = new();
+	private int serviceIntensity;
 	public int requestedCount = 0;
 	public int processedCount = 0;
 	public int rejectedCount = 0;
 
-	public Server()
+	public Server(int serviceIntensity)
 	{
 		pool = new PoolRecord[poolSize];
+		this.serviceIntensity = serviceIntensity;
 	}
 
 	public void proc(object? sender, ProcEventArgs e)
@@ -41,7 +43,7 @@ class Server
 	{
 		int? id = (int?)arg;
 		Console.WriteLine("Обработка заявки: {0}", id);
-		Thread.Sleep(500);
+		Thread.Sleep(1000 / serviceIntensity);
 		for (int i = 0; i < poolSize; i++)
 		{
 			if (pool[i].thread == Thread.CurrentThread)
